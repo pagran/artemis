@@ -37,6 +37,7 @@ jobs:
 
       - name: Prepare pages
         run: |
+          ls -l
           mkdir tmp_pages
           cp -fr master/public/* tmp_pages/
           python master/scripts/convert-data.py data/data tmp_pages/data.json
