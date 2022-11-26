@@ -75,7 +75,7 @@ def save_csv_auto_fields(path, rows):
     with open(path, mode='w', newline='', encoding='utf-8') as f:
         csv_writer = csv.DictWriter(f, fieldnames=[time_column, *fieldnames], delimiter=';', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writeheader()
-        csv_writer.writerows(rows)
+        csv_writer.writerows(sorted(rows, key=lambda x: x[time_column]))
 
 
 src_directory, output_file_json, output_file_csv = sys.argv[1:]
