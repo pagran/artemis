@@ -82,33 +82,39 @@ def save_csv_auto_fields(path, rows):
 src_directory, output_file_json, output_file_csv = sys.argv[1:]
 
 rows = []
-json_data = defaultdict(list)
+
+json_last_time = 0 
+json_values = defaultdict(list)
+
 for f in glob(src_directory + '/*.json'):
     unix_time = int(Path(f).stem)
+    if unix_time > json_last_time:
+        json_last_time = json_last_time
+
     data = load_json(f)
     row = {time_column: unix_time}
 
     for k, v in data.items():
         if not k.startswith('Parameter_'):
             continue
-        row[remap_param(k)] = v['Value']
+        readable_name = remap_param(k)
+        row[readable_name] = v['Value']
 
         param_idx = int(v['Number'])
-
         if param_idx > 40: # Save onl known values in json
             continue
         value = v['Value']
         if v['Type'] == '2':
             value = float(value)
-        json_data[param_idx].append([unix_time, value])
+        json_values[readable_name].append([unix_time, value])
 
     if row:
         rows.append(row)
 
-for idx, vals in json_data.items():
-    json_data[idx] = sorted(vals, key=lambda v: v[0])
+for idx, vals in json_values.items():
+    json_values[idx] = sorted(vals, key=lambda v: v[0])
 
-save_json(output_file_json, json_data)
+save_json(output_file_json, {'last_time': json_last_time, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
 
 print('work done')
