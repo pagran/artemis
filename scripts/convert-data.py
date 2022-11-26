@@ -75,6 +75,18 @@ json_fields_whitelist = {
     'CITP_BatC2bVolt': 'CITP_BatVolt',
 }
 
+json_group_description = {
+    'CITP_VelRelEarth_Mag': 'Orion velocity (Miles per hour)', 
+    'CITP_DistMoon_Mag': 'Orion current distance to the surface of the Moon (Miles)', 
+    'CITP_DistEarth_Mag': 'Orion current distance to the surface of the Earth (Miles)',
+    'CITP_CabTemp': 'Max cabin temparatures in each zone and avg (Degrees F)',
+    'CITP_ExtTemp': 'Max temperature reading between 2 sensors for each of the 4 solar array wings (Degrees F)',
+    'CITP_CabPress': 'Average value between 2 pressure sensors. (Pounds per Square inch Absolute)',
+    'CITP_OrnSpinSpeed': 'Orion\'s current spin speed (Degrees per Minute)',
+    'CITP_BatSOC': 'The percent of life left in each of the 4 batteries onboard (Percent)',
+    'CITP_BatVolt': 'The voltages of each of the 4 batteries onboard (Volts)',
+}
+
 time_column = "Time"
 
 def remap_param(k):
@@ -115,7 +127,6 @@ json_last_time = 0
 
 files = sorted(glob(src_directory + '/*.json'), key=get_timestamp)
 json_timestamps = list(map(get_timestamp, files))
-print(json_timestamps)
 json_values = defaultdict(lambda: [None]*len(json_timestamps))
 
 for index, f in enumerate(files):
@@ -145,10 +156,7 @@ for index, f in enumerate(files):
     if row:
         rows.append(row)
 
-save_json(output_file_json, {'last_time': json_last_time,  'groups': json_fields_whitelist, 'timestamps': json_timestamps, 'values': json_values})
-
-
-
+save_json(output_file_json, {'last_time': json_last_time,  'groups': json_fields_whitelist, 'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
 
 print('work done')
