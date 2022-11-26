@@ -51,6 +51,30 @@ param_mapping = {
     "Parameter_501": "OCAVSWXTVMX0006Q"
 }
 
+json_fields_whitelist = {
+    'CITP_VelRelEarth_Mag', 
+    'CITP_DistMoon_Mag', 
+    'CITP_DistEarth_Mag',
+    'CITP_CabTemp_Zone1',
+    'CITP_CabTemp_Zone2',
+    'CITP_CabTemp_Zone3',
+    'CITP_CabTemp_Avg',
+    'CITP_ExtTemp_Wing_1', 
+    'CITP_ExtTemp_Wing_2', 
+    'CITP_ExtTemp_Wing_3',
+    'CITP_ExtTemp_Wing_4',
+    'CITP_CabPress',
+    'CITP_OrnSpinSpeed',
+    'CITP_BatC1aSOC',
+    'CITP_BatC1bSOC',
+    'CITP_BatC2aSOC',
+    'CITP_BatC2bSOC',
+    'CITP_BatC1aVolt',
+    'CITP_BatC1bVolt',
+    'CITP_BatC2aVolt',
+    'CITP_BatC2bVolt',
+}
+
 time_column = "Time"
 
 def remap_param(k):
@@ -89,7 +113,7 @@ json_values = defaultdict(list)
 for f in glob(src_directory + '/*.json'):
     unix_time = int(Path(f).stem)
     if unix_time > json_last_time:
-        json_last_time = json_last_time
+        json_last_time = unix_time
 
     data = load_json(f)
     row = {time_column: unix_time}
@@ -100,8 +124,7 @@ for f in glob(src_directory + '/*.json'):
         readable_name = remap_param(k)
         row[readable_name] = v['Value']
 
-        param_idx = int(v['Number'])
-        if param_idx > 40: # Save onl known values in json
+        if not readable_name in json_fields_whitelist:
             continue
         value = v['Value']
         if v['Type'] == '2':
@@ -113,6 +136,8 @@ for f in glob(src_directory + '/*.json'):
 
 for idx, vals in json_values.items():
     json_values[idx] = sorted(vals, key=lambda v: v[0])
+
+print(json_last_time)
 
 save_json(output_file_json, {'last_time': json_last_time, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
