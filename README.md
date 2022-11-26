@@ -4,7 +4,7 @@
 
 > Project is unofficial and not affiliated with NASA
 
-> ## [Online Viewer link](https://pagran.github.io/artemis/)
+## [Online viewer link](https://pagran.github.io/artemis/)
 
 A project created for recording historical data about [Artemis I](https://www.nasa.gov/specials/artemis-i)
 
@@ -21,3 +21,4 @@ A project created for recording historical data about [Artemis I](https://www.na
  - [Official tracker](https://www.nasa.gov/specials/trackartemis/)
  - [About mission](https://www.nasa.gov/specials/artemis-i/)
  - [Parameter description](https://s3.us-east-1.amazonaws.com/nasa-jsc-public/Orion/mission/parameter_key.txt)
+ - [Historical data (.csv)](https://pagran.github.io/artemis/data.csv.gz)
