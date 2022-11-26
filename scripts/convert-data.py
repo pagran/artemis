@@ -50,6 +50,8 @@ param_mapping = {
     "Parameter_501": "OCAVSWXTVMX0006Q"
 }
 
+time_column = "Time"
+
 def remap_param(k):
     if k in param_mapping:
         return param_mapping[k]
@@ -68,9 +70,10 @@ def save_csv_auto_fields(path, rows):
     for r in rows:
         fieldnames |= r.keys()
     
-    fieldnames = sorted(fieldnames)    
+    fieldnames.remove(time_column)
+    fieldnames = sorted(fieldnames)
     with open(path, mode='w', newline='', encoding='utf-8') as f:
-        csv_writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+        csv_writer = csv.DictWriter(f, fieldnames=[time_column, *fieldnames], delimiter=';', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writeheader()
         csv_writer.writerows(rows)
 
@@ -82,7 +85,8 @@ json_data = defaultdict(list)
 for f in glob(src_directory + '/*.json'):
     unix_time = int(Path(f).stem)
     data = load_json(f)
-    row = {}
+    row = {time_column: unix_time}
+
     for k, v in data.items():
         if not k.startswith('Parameter_'):
             continue
