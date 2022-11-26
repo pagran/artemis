@@ -1,1 +1,51 @@
-TODO
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Artemis Flight History</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@3.0.0/build/pure-min.css">
+    <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.22/dist/uPlot.min.css">
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .l-pad {
+            padding: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pure-menu pure-menu-horizontal">
+        <div href="#" class="pure-menu-heading pure-menu-disabled">Artemis Flight History (Updated: <b
+                id="update-time">-</b>)</div>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item">
+                <a class="pure-menu-link" href="data.csv.gz">Download historical data (.csv)</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="pure-g l-pad">
+        <div class="pure-u-1 center">
+            <form class="pure-form">
+                <select id="chart-type" class="pure-input-1">
+                    <option>Loading...</option>
+                </select>
+            </form>
+        </div>
+        
+        <div class="pure-u-1 center" id="chart">
+        </div>
+    </div>
+    <div id="chart"></div>
+    <script src="https://unpkg.com/uplot@1.6.22/dist/uPlot.iife.min.js"></script>
+    <script src="chart.js"></script>
+</body>
+
+</html>
