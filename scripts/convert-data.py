@@ -52,27 +52,27 @@ param_mapping = {
 }
 
 json_fields_whitelist = {
-    'CITP_VelRelEarth_Mag', 
-    'CITP_DistMoon_Mag', 
-    'CITP_DistEarth_Mag',
-    'CITP_CabTemp_Zone1',
-    'CITP_CabTemp_Zone2',
-    'CITP_CabTemp_Zone3',
-    'CITP_CabTemp_Avg',
-    'CITP_ExtTemp_Wing_1', 
-    'CITP_ExtTemp_Wing_2', 
-    'CITP_ExtTemp_Wing_3',
-    'CITP_ExtTemp_Wing_4',
-    'CITP_CabPress',
-    'CITP_OrnSpinSpeed',
-    'CITP_BatC1aSOC',
-    'CITP_BatC1bSOC',
-    'CITP_BatC2aSOC',
-    'CITP_BatC2bSOC',
-    'CITP_BatC1aVolt',
-    'CITP_BatC1bVolt',
-    'CITP_BatC2aVolt',
-    'CITP_BatC2bVolt',
+    'CITP_VelRelEarth_Mag': None, 
+    'CITP_DistMoon_Mag': None, 
+    'CITP_DistEarth_Mag': None,
+    'CITP_CabTemp_Zone1': 'CITP_CabTemp',
+    'CITP_CabTemp_Zone2': 'CITP_CabTemp',
+    'CITP_CabTemp_Zone3': 'CITP_CabTemp',
+    'CITP_CabTemp_Avg': 'CITP_CabTemp',
+    'CITP_ExtTemp_Wing_1': 'CITP_ExtTemp', 
+    'CITP_ExtTemp_Wing_2': 'CITP_ExtTemp', 
+    'CITP_ExtTemp_Wing_3': 'CITP_ExtTemp',
+    'CITP_ExtTemp_Wing_4': 'CITP_ExtTemp',
+    'CITP_CabPress': None,
+    'CITP_OrnSpinSpeed': None,
+    'CITP_BatC1aSOC': 'CITP_BatSOC',
+    'CITP_BatC1bSOC': 'CITP_BatSOC',
+    'CITP_BatC2aSOC': 'CITP_BatSOC',
+    'CITP_BatC2bSOC': 'CITP_BatSOC',
+    'CITP_BatC1aVolt': 'CITP_BatVolt',
+    'CITP_BatC1bVolt': 'CITP_BatVolt',
+    'CITP_BatC2aVolt': 'CITP_BatVolt',
+    'CITP_BatC2bVolt': 'CITP_BatVolt',
 }
 
 time_column = "Time"
@@ -102,15 +102,23 @@ def save_csv_auto_fields(path, rows):
         csv_writer.writeheader()
         csv_writer.writerows(sorted(rows, key=lambda x: x[time_column]))
 
+def get_timestamp(f):
+    return int(Path(f).stem)
+
 
 src_directory, output_file_json, output_file_csv = sys.argv[1:]
 
 rows = []
 
 json_last_time = 0 
-json_values = defaultdict(list)
 
-for f in glob(src_directory + '/*.json'):
+
+files = sorted(glob(src_directory + '/*.json'), key=get_timestamp)
+json_timestamps = list(map(get_timestamp, files))
+print(json_timestamps)
+json_values = defaultdict(lambda: [None]*len(json_timestamps))
+
+for index, f in enumerate(files):
     unix_time = int(Path(f).stem)
     if unix_time > json_last_time:
         json_last_time = unix_time
@@ -126,20 +134,21 @@ for f in glob(src_directory + '/*.json'):
 
         if not readable_name in json_fields_whitelist:
             continue
+
+
         value = v['Value']
         if v['Type'] == '2':
             value = float(value)
-        json_values[readable_name].append([unix_time, value])
+
+        json_values[readable_name][index] = value
 
     if row:
         rows.append(row)
 
-for idx, vals in json_values.items():
-    json_values[idx] = sorted(vals, key=lambda v: v[0])
+save_json(output_file_json, {'last_time': json_last_time,  'groups': json_fields_whitelist, 'timestamps': json_timestamps, 'values': json_values})
 
-print(json_last_time)
 
-save_json(output_file_json, {'last_time': json_last_time, 'values': json_values})
+
 save_csv_auto_fields(output_file_csv, rows)
 
 print('work done')
