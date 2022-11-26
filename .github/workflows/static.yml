@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir tmp_pages
           cp -fr master/public/* tmp_pages/
-          python master/scripts/convert-data.py data/data tmp_pages/data.json tmp_pages/data.csv
+          python master/scripts/convert-data.py data/data tmp_pages/data.json tmp_pages/data.csv.gz
 
       - name: Setup Pages
         uses: actions/configure-pages@v2

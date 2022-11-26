@@ -4,6 +4,7 @@ import json
 from glob import glob
 from pathlib import Path
 from collections import defaultdict
+import gzip
 
 param_mapping = {
     "Parameter_1": "CITP_VelRelEarth_Mag",
@@ -72,7 +73,7 @@ def save_csv_auto_fields(path, rows):
     
     fieldnames.remove(time_column)
     fieldnames = sorted(fieldnames)
-    with open(path, mode='w', newline='', encoding='utf-8') as f:
+    with gzip.open(path, mode='wt', newline='') as f:
         csv_writer = csv.DictWriter(f, fieldnames=[time_column, *fieldnames], delimiter=';', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writeheader()
         csv_writer.writerows(sorted(rows, key=lambda x: x[time_column]))
