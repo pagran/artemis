@@ -156,7 +156,14 @@ for index, f in enumerate(files):
     if row:
         rows.append(row)
 
-save_json(output_file_json, {'last_time': json_last_time,  'groups': json_fields_whitelist, 'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
+groups = defaultdict(list)
+for k, v in json_fields_whitelist.items():
+    if v is None:
+        groups[k] = [k]
+    else:
+        groups[v].append(k)
+
+save_json(output_file_json, {'last_time': json_last_time,  'groups': groups, 'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
 
 print('work done')
