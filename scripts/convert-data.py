@@ -73,6 +73,10 @@ json_fields_whitelist = {
     'CITP_BatC1bVolt': 'CITP_BatVolt',
     'CITP_BatC2aVolt': 'CITP_BatVolt',
     'CITP_BatC2bVolt': 'CITP_BatVolt',
+
+    'CITP_ServiceFuelRemain': 'CITP_Fuel',
+    'CITP_CrewFuelRemain': 'CITP_Fuel',
+    'CITP_TotalFuelRemain': 'CITP_Fuel',
 }
 
 json_group_description = {
@@ -85,6 +89,7 @@ json_group_description = {
     'CITP_OrnSpinSpeed': 'Orion\'s current spin speed (Degrees per Minute)',
     'CITP_BatSOC': 'The percent of life left in each of the 4 batteries onboard (Percent)',
     'CITP_BatVolt': 'The voltages of each of the 4 batteries onboard (Volts)',
+    'CITP_Fuel': 'Fuel remaining in service module in slugs, in crew module in poundmass, and total fuel remaining in in both modules',
 }
 
 time_column = "Time"
