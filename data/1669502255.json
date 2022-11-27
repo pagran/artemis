@@ -1,0 +1,32 @@
+
+{
+    "File":{
+        "Date":"2022/11/26 18:37:34",
+        "Activity":"MIS",
+        "Type":4
+    },
+    "Parameter_14":{
+        "Number":"14",
+        "Length":"2",
+        "Status":"Good",
+        "Time":"2022:331:00:37:33.902",
+        "Type":"12",
+        "Value":"AM"
+    },
+    "Parameter_22":{
+        "Number":"22",
+        "Length":"0",
+        "Status":"Good",
+        "Time":"2022:331:00:37:33.902",
+        "Type":"12",
+        "Value":""
+    },
+    "Parameter_5014":{
+        "Number":"5014",
+        "Length":"8",
+        "Status":"Good",
+        "Time":"2022:331:00:37:30.675",
+        "Type":"2",
+        "Value":"0"
+    }
+}
