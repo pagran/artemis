@@ -1,7 +1,11 @@
 let currentPlot = null;
 
 const chartEl = document.getElementById('chart')
-const pallete = ["#b30000", "#7c1158", "#4421af", "#1a53ff", "#0d88e6", "#00b7c7", "#5ad45a", "#8be04e", "#ebdc78"]
+const pallete = ["#003f5c", "#374c80", "#7a5195", "#bc5090", "#ef5675", "#ff764a", "#ffa600"]
+
+function isDarkMode() {
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+}
 
 // TODO: Rewrite this
 function getHeight() {
@@ -26,12 +30,20 @@ function render(raw, group) {
     data.push(raw.values[name])
   }
 
-
+  const isDark = isDarkMode()
+  const axe = {
+    stroke: isDark ? "#c7d0d9" : null,
+    grid: {
+      width: 1 / devicePixelRatio,
+      stroke: isDark ? "#2c3235" : null,
+    },
+  }
   const opts = {
     id: group,
     width: chartEl.offsetWidth,
     height: getHeight(),
-    series
+    series,
+    axes: [axe, axe],
   }
 
   currentPlot = new uPlot(opts, data, chartEl)
@@ -46,17 +58,18 @@ function init(data) {
     chartType.options.add(new Option(desc, value))
   }
 
-  chartType.addEventListener('change', function () {
-    render(data, this.value)
-  })
+  const rerender = () => render(data, chartType.value)
 
-  render(data, chartType.value)
+  chartType.addEventListener('change', rerender)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rerender)
 
   let resizeTimeout = null;
   window.addEventListener('resize', function () {
     clearInterval(resizeTimeout);
-    resizeTimeout = setTimeout(() => render(data, chartType.value), 250);
+    resizeTimeout = setTimeout(rerender, 250);
   })
+
+  rerender()
 }
 
 fetch('data.json')
