@@ -1,7 +1,8 @@
 let currentPlot = null;
 
 const chartEl = document.getElementById('chart')
-const pallete = ["#003f5c", "#374c80", "#7a5195", "#bc5090", "#ef5675", "#ff764a", "#ffa600"]
+const palleteDark = ["#8a3ffc", "#33b1ff", "#007d79", "#ff7eb6", "#fa4d56", "#fff1f1", "#6fdc8c"]
+const palleteLight = ["#6929c4", "#1192e8", "#005d5d", "#9f1853", "#fa4d56", "#570408", "#198038"]
 
 function isDarkMode() {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -16,10 +17,12 @@ function render(raw, group) {
   if (currentPlot !== null) {
     currentPlot.destroy()
   }
+  const isDark = isDarkMode()
 
   const series = [{}]
   const data = [raw.timestamps]
 
+  const pallete = isDark ? palleteDark : palleteLight
   for (const name of raw.groups[group]) {
     series.push({
       label: name,
@@ -30,7 +33,7 @@ function render(raw, group) {
     data.push(raw.values[name])
   }
 
-  const isDark = isDarkMode()
+
   const axe = {
     stroke: isDark ? "#c7d0d9" : null,
     grid: {
