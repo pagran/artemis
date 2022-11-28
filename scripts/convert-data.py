@@ -85,7 +85,7 @@ json_group_description = {
     'CITP_DistEarth_Mag': 'Orion current distance to the surface of the Earth (km)',
     'CITP_CabTemp': 'Max cabin temparatures in each zone and avg (°C)',
     'CITP_ExtTemp': 'Max temperature reading between 2 sensors for each of the 4 solar array wings (°C)',
-    'CITP_CabPress': 'Average value between 2 pressure sensors. (bar)',
+    'CITP_CabPress': 'Average value between 2 pressure sensors. (kPa)',
     'CITP_OrnSpinSpeed': 'Orion\'s current spin speed (degrees per minute)',
     'CITP_BatSOC': 'The percent of life left in each of the 4 batteries onboard (%)',
     'CITP_BatVolt': 'The voltages of each of the 4 batteries onboard (volts)',
@@ -101,8 +101,8 @@ def fahrenheit2celsius(x):
     return round((x - 32) * 5/9, 2)
 
 
-def psi2bar(x):
-    return round(x / 14.504, 2)
+def psi2kpa(x):
+    return round(x * 6,895, 4)
 
 
 def slug2kg(x):
@@ -125,7 +125,7 @@ json_convert_to_metrics = {
     'CITP_ExtTemp_Wing_2': fahrenheit2celsius,
     'CITP_ExtTemp_Wing_3': fahrenheit2celsius,
     'CITP_ExtTemp_Wing_4': fahrenheit2celsius,
-    'CITP_CabPress': psi2bar,
+    'CITP_CabPress': psi2kpa,
 
     'CITP_ServiceFuelRemain': slug2kg,
     'CITP_CrewFuelRemain': pound2kg,
