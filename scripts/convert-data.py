@@ -52,15 +52,15 @@ param_mapping = {
 }
 
 json_fields_whitelist = {
-    'CITP_VelRelEarth_Mag': None, 
-    'CITP_DistMoon_Mag': None, 
+    'CITP_VelRelEarth_Mag': None,
+    'CITP_DistMoon_Mag': None,
     'CITP_DistEarth_Mag': None,
     'CITP_CabTemp_Zone1': 'CITP_CabTemp',
     'CITP_CabTemp_Zone2': 'CITP_CabTemp',
     'CITP_CabTemp_Zone3': 'CITP_CabTemp',
     'CITP_CabTemp_Avg': 'CITP_CabTemp',
-    'CITP_ExtTemp_Wing_1': 'CITP_ExtTemp', 
-    'CITP_ExtTemp_Wing_2': 'CITP_ExtTemp', 
+    'CITP_ExtTemp_Wing_1': 'CITP_ExtTemp',
+    'CITP_ExtTemp_Wing_2': 'CITP_ExtTemp',
     'CITP_ExtTemp_Wing_3': 'CITP_ExtTemp',
     'CITP_ExtTemp_Wing_4': 'CITP_ExtTemp',
     'CITP_CabPress': None,
@@ -80,44 +80,90 @@ json_fields_whitelist = {
 }
 
 json_group_description = {
-    'CITP_VelRelEarth_Mag': 'Orion velocity (Miles per hour)', 
-    'CITP_DistMoon_Mag': 'Orion current distance to the surface of the Moon (Miles)', 
-    'CITP_DistEarth_Mag': 'Orion current distance to the surface of the Earth (Miles)',
-    'CITP_CabTemp': 'Max cabin temparatures in each zone and avg (Degrees F)',
-    'CITP_ExtTemp': 'Max temperature reading between 2 sensors for each of the 4 solar array wings (Degrees F)',
-    'CITP_CabPress': 'Average value between 2 pressure sensors. (Pounds per Square inch Absolute)',
-    'CITP_OrnSpinSpeed': 'Orion\'s current spin speed (Degrees per Minute)',
-    'CITP_BatSOC': 'The percent of life left in each of the 4 batteries onboard (Percent)',
-    'CITP_BatVolt': 'The voltages of each of the 4 batteries onboard (Volts)',
-    'CITP_Fuel': 'Fuel remaining in service module in slugs, in crew module in poundmass, and total fuel remaining in in both modules',
+    'CITP_VelRelEarth_Mag': 'Orion velocity (km/h)',
+    'CITP_DistMoon_Mag': 'Orion current distance to the surface of the Moon (km)',
+    'CITP_DistEarth_Mag': 'Orion current distance to the surface of the Earth (km)',
+    'CITP_CabTemp': 'Max cabin temparatures in each zone and avg (°C)',
+    'CITP_ExtTemp': 'Max temperature reading between 2 sensors for each of the 4 solar array wings (°C)',
+    'CITP_CabPress': 'Average value between 2 pressure sensors. (bar)',
+    'CITP_OrnSpinSpeed': 'Orion\'s current spin speed (degrees per minute)',
+    'CITP_BatSOC': 'The percent of life left in each of the 4 batteries onboard (%)',
+    'CITP_BatVolt': 'The voltages of each of the 4 batteries onboard (volts)',
+    'CITP_Fuel': 'Fuel remaining in service module, crew module and total fuel both modules (kg)',
+}
+
+
+def mile2km(x):
+    return round(x * 1.609344)
+
+
+def fahrenheit2celsius(x):
+    return round((x - 32) * 5/9, 2)
+
+
+def psi2bar(x):
+    return round(x / 14.504, 2)
+
+
+def slug2kg(x):
+    return round(x * 14.59390, 3)
+
+
+def pound2kg(x):
+    return round(x * 0.45359237, 3)
+
+
+json_convert_to_metrics = {
+    'CITP_VelRelEarth_Mag': mile2km,
+    'CITP_DistMoon_Mag': mile2km,
+    'CITP_DistEarth_Mag': mile2km,
+    'CITP_CabTemp_Zone1': fahrenheit2celsius,
+    'CITP_CabTemp_Zone2': fahrenheit2celsius,
+    'CITP_CabTemp_Zone3': fahrenheit2celsius,
+    'CITP_CabTemp_Avg': fahrenheit2celsius,
+    'CITP_ExtTemp_Wing_1': fahrenheit2celsius,
+    'CITP_ExtTemp_Wing_2': fahrenheit2celsius,
+    'CITP_ExtTemp_Wing_3': fahrenheit2celsius,
+    'CITP_ExtTemp_Wing_4': fahrenheit2celsius,
+    'CITP_CabPress': psi2bar,
+
+    'CITP_ServiceFuelRemain': slug2kg,
+    'CITP_CrewFuelRemain': pound2kg,
+    'CITP_TotalFuelRemain': pound2kg,
 }
 
 time_column = "Time"
+
 
 def remap_param(k):
     if k in param_mapping:
         return param_mapping[k]
     return k
 
+
 def load_json(path):
     with open(path, 'r') as f:
         return json.load(f)
+
 
 def save_json(path, values):
     with open(path, 'w') as f:
         json.dump(values, f)
 
+
 def save_csv_auto_fields(path, rows):
     fieldnames = set()
     for r in rows:
         fieldnames |= r.keys()
-    
+
     fieldnames.remove(time_column)
     fieldnames = sorted(fieldnames)
     with gzip.open(path, mode='wt', newline='') as f:
-        csv_writer = csv.DictWriter(f, fieldnames=[time_column, *fieldnames], delimiter=';', quoting=csv.QUOTE_MINIMAL)
+        csv_writer = csv.DictWriter(f, fieldnames=[
+                                    time_column, *fieldnames], delimiter=';', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writeheader()
         csv_writer.writerows(sorted(rows, key=lambda x: x[time_column]))
+
 
 def get_timestamp(f):
     return int(Path(f).stem)
@@ -127,7 +173,7 @@ src_directory, output_file_json, output_file_csv = sys.argv[1:]
 
 rows = []
 
-json_last_time = 0 
+json_last_time = 0
 
 
 files = sorted(glob(src_directory + '/*.json'), key=get_timestamp)
@@ -151,10 +197,11 @@ for index, f in enumerate(files):
         if not readable_name in json_fields_whitelist:
             continue
 
-
         value = v['Value']
         if v['Type'] == '2':
             value = float(value)
+            if readable_name in json_convert_to_metrics:
+                value = json_convert_to_metrics[readable_name](value)
 
         json_values[readable_name][index] = value
 
@@ -168,7 +215,8 @@ for k, v in json_fields_whitelist.items():
     else:
         groups[v].append(k)
 
-save_json(output_file_json, {'last_time': json_last_time,  'groups': groups, 'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
+save_json(output_file_json, {'last_time': json_last_time,  'groups': groups,
+          'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
 
 print('work done')
