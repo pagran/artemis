@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.22/dist/uPlot.min.css">
     <style>
         :root {
-            --spacing: 0.25rem
+            --spacing: 0.20rem
         }
     </style>
 </head>
@@ -19,9 +19,7 @@
 <body>
     <nav class="container-fluid">
         <ul>
-            <li> Artemis Flight History (LAST INFO: <b id="update-time">-</b>)</li>
-        </ul>
-        <ul>
+            <li>Artemis Flight History (LAST INFO: <b id="update-time">-</b>)</li>
             <li> <a href="data.csv.gz">Download historical data (.csv)</a></li>
             <li><a href="https://github.com/pagran/artemis" target="_blank">GitHub</a></li>
         </ul>
@@ -32,10 +30,9 @@
                 <option>Loading...</option>
             </select>
         </div>
-
-        <div id="chart">
-        </div>
     </main>
+    <div id="chart">
+    </div>
     <script src="https://unpkg.com/uplot@1.6.22/dist/uPlot.iife.min.js"></script>
     <script src="chart.js"></script>
 </body>
