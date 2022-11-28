@@ -29,10 +29,6 @@ function render(raw, groups) {
   const height = Math.floor(getHeight() / groups.length - chartHeightPad / groups.length)
 
   const cursorOpts = {
-    lock: true,
-    focus: {
-      prox: 16,
-    },
     sync: {
       key: syncPlot.key,
       setSeries: true
