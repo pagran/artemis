@@ -102,7 +102,7 @@ def fahrenheit2celsius(x):
 
 
 def psi2kpa(x):
-    return round(x * 6,895, 4)
+    return round(x * 6.895, 4)
 
 
 def slug2kg(x):
