@@ -169,16 +169,19 @@ def save_csv_auto_fields(path, rows):
 def get_timestamp(f):
     return int(Path(f).stem)
 
+
 src_directory, output_file_json, output_file_csv = sys.argv[1:]
 
 
-files = sorted(glob(src_directory + '/*.json'), key=get_timestamp)
-json_timestamps = list(map(get_timestamp, files))
+files = map(lambda f: (f, get_timestamp(f)), glob(src_directory + '/*.json'))
+files = sorted(files, key=lambda x: x[1])
+
+json_timestamps = list(map(lambda x: x[1], files))
 json_values = defaultdict(lambda: [None]*len(json_timestamps))
 json_last_time = max(json_timestamps)
 
 rows = []
-for index, f in enumerate(files):
+for index, (f, _) in enumerate(files):
     data = load_json(f)
     row = {time_column: json_timestamps[index]}
 
