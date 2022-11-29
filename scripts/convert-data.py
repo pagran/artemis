@@ -5,6 +5,7 @@ from glob import glob
 from pathlib import Path
 from collections import defaultdict
 import gzip
+import time
 
 param_mapping = {
     "Parameter_1": "CITP_VelRelEarth_Mag",
@@ -168,25 +169,18 @@ def save_csv_auto_fields(path, rows):
 def get_timestamp(f):
     return int(Path(f).stem)
 
-
 src_directory, output_file_json, output_file_csv = sys.argv[1:]
-
-rows = []
-
-json_last_time = 0
 
 
 files = sorted(glob(src_directory + '/*.json'), key=get_timestamp)
 json_timestamps = list(map(get_timestamp, files))
 json_values = defaultdict(lambda: [None]*len(json_timestamps))
+json_last_time = max(json_timestamps)
 
+rows = []
 for index, f in enumerate(files):
-    unix_time = int(Path(f).stem)
-    if unix_time > json_last_time:
-        json_last_time = unix_time
-
     data = load_json(f)
-    row = {time_column: unix_time}
+    row = {time_column: json_timestamps[index]}
 
     for k, v in data.items():
         if not k.startswith('Parameter_'):
@@ -219,4 +213,5 @@ save_json(output_file_json, {'last_time': json_last_time,  'groups': groups,
           'groups_desc': json_group_description, 'timestamps': json_timestamps, 'values': json_values})
 save_csv_auto_fields(output_file_csv, rows)
 
-print('work done')
+print('work done, last update:', round(
+    (time.time()-json_last_time) / 60 / 60, 2), 'hour ago', json_last_time)
