@@ -52,7 +52,7 @@ function render(raw, groups) {
     }
 
     const axe = {
-      stroke: isDark ? "#c7d0d9" : null,
+      stroke: isDark ? "#c7d0d9" : '#000000',
       grid: {
         width: 1 / devicePixelRatio,
         stroke: isDark ? "#2c3235" : null,
