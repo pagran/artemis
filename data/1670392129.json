@@ -1,0 +1,24 @@
+
+{
+    "File":{
+        "Date":"2022/12/07 01:48:48",
+        "Activity":"MIS",
+        "Type":4
+    },
+    "Parameter_14":{
+        "Number":"14",
+        "Length":"2",
+        "Status":"Good",
+        "Time":"2022:341:07:48:40.843",
+        "Type":"12",
+        "Value":"AM"
+    },
+    "Parameter_22":{
+        "Number":"22",
+        "Length":"0",
+        "Status":"Good",
+        "Time":"2022:341:07:48:40.843",
+        "Type":"12",
+        "Value":""
+    }
+}
