@@ -1,0 +1,56 @@
+
+{
+    "File":{
+        "Date":"2022/12/09 13:02:55",
+        "Activity":"MIS",
+        "Type":4
+    },
+    "Parameter_14":{
+        "Number":"14",
+        "Length":"2",
+        "Status":"Good",
+        "Time":"2022:343:19:02:52.300",
+        "Type":"12",
+        "Value":"PM"
+    },
+    "Parameter_22":{
+        "Number":"22",
+        "Length":"0",
+        "Status":"Good",
+        "Time":"2022:343:19:02:52.300",
+        "Type":"12",
+        "Value":""
+    },
+    "Parameter_2012":{
+        "Number":"2012",
+        "Length":"8",
+        "Status":"Good",
+        "Time":"2022:343:19:02:50.652",
+        "Type":"2",
+        "Value":"0.855817"
+    },
+    "Parameter_2013":{
+        "Number":"2013",
+        "Length":"8",
+        "Status":"Good",
+        "Time":"2022:343:19:02:50.652",
+        "Type":"2",
+        "Value":"-0.0634696"
+    },
+    "Parameter_2014":{
+        "Number":"2014",
+        "Length":"8",
+        "Status":"Good",
+        "Time":"2022:343:19:02:50.652",
+        "Type":"2",
+        "Value":"-0.120914"
+    },
+    "Parameter_2015":{
+        "Number":"2015",
+        "Length":"8",
+        "Status":"Good",
+        "Time":"2022:343:19:02:50.652",
+        "Type":"2",
+        "Value":"0.498928"
+    }
+}
