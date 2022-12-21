@@ -1,6 +1,5 @@
 # Artemis Flight History
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/pagran/artemis/data)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/pagran/artemis/Deploy%20to%20Pages/data)
+> **Data gathering completed**
 
 > Project is unofficial and not affiliated with NASA
 
